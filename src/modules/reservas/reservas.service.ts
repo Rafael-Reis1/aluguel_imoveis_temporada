@@ -16,7 +16,8 @@ export class ReservasService {
                             {data_entrada: {
                                 lte: data.data_saida
                             }},
-                            { id_imovel: data.id_imovel }
+                            { id_imovel: data.id_imovel },
+                            { imoveis: { disponivel: false } }
                         ]
                     },
                     {
@@ -27,14 +28,15 @@ export class ReservasService {
                             {data_saida: {
                                 lte: data.data_saida
                             }},
-                            { id_imovel: data.id_imovel }
+                            { id_imovel: data.id_imovel },
+                            { imoveis: { disponivel: false } }
                         ]
                     }
                 ]
             }
         })
         if (reservaExists) {
-            throw new Error('Reserva ja existe para esse imovel!');
+            throw new Error('Reserva já existe para esse imóvel ou o imóvel está indisponível!');
         }
         const reserva = await this.prisma.reservaTemporada.create({ data });
         return reserva;

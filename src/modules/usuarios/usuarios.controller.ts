@@ -1,9 +1,8 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Usuario } from '@prisma/client';
+import { UsuarioAtual } from '../auth/decorators/usuario-atual.decorator';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UsuariosService } from './usuarios.service';
-import { IsPublic } from '../auth/decorators/is-public.decorator';
-import { UsuarioAtual } from '../auth/decorators/usuario-atual.decorator';
-import { Usuario } from '@prisma/client';
 
 @Controller('usuarios')
 export class UsuariosController {

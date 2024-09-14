@@ -15,11 +15,17 @@ datasource db {
 
 model ImovelTemporada {
   id_imovel String @id @default(uuid())
-  endereco String
+  cep String
+  logradouro String
+  bairro String
+  localidade String
+  estado String
   preco Float
   proprietario String
+  disponivel Boolean
   @@map("imoveis")
   ReservaTemporada ReservaTemporada[]
+  usuarios Usuario @relation(fields: [proprietario], references: [id_usuario])
 }
 
 model ReservaTemporada {
@@ -30,6 +36,7 @@ model ReservaTemporada {
   data_saida DateTime
   @@map("reservas")
   imoveis ImovelTemporada @relation(fields: [id_imovel], references: [id_imovel])
+  usuarios Usuario @relation(fields: [cliente], references: [id_usuario])
 }
 
 model Usuario {
@@ -37,4 +44,7 @@ model Usuario {
   email String @unique
   senha String
   nome String
+  @@map("usuarios")
+  ImovelTemporada ImovelTemporada[]
+  ReservaTemporada ReservaTemporada[]
 }
