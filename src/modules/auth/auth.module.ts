@@ -4,6 +4,7 @@ import { AuthController } from './auth.controller';
 import { LocalStrategy } from './strategies/local.strategy';
 import { UsuariosModule } from '../usuarios/usuarios.module';
 import { JwtModule } from '@nestjs/jwt';
+import { JwtStrategy } from './strategies/jwt.strategy';
 
 @Module({
   imports: [UsuariosModule, JwtModule.register({
@@ -11,6 +12,6 @@ import { JwtModule } from '@nestjs/jwt';
     signOptions: { expiresIn: '30d'}
   })],
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy],
+  providers: [AuthService, LocalStrategy, JwtStrategy],
 })
 export class AuthModule {}
