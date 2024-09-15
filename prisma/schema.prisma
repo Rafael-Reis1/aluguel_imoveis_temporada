@@ -33,6 +33,8 @@ model ReservaTemporada {
   id_reserva String @id @default(uuid())
   id_imovel String
   cliente String
+  totalDias String
+  totalPreco Float
   data_entrada DateTime
   data_saida DateTime
   @@map("reservas")

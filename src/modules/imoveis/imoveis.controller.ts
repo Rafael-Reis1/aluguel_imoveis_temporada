@@ -1,8 +1,8 @@
-import { Body, Controller, Delete, Get, Post } from '@nestjs/common';
-import { ImoveisService } from './imoveis.service';
-import { ImovelDTO } from './imovel.dto';
+import { Body, Controller, Delete, Get, Patch, Post } from '@nestjs/common';
 import { UsuarioAtual } from '../auth/decorators/usuario-atual.decorator';
 import { Usuario } from '../usuarios/entities/usuario.entity';
+import { ImoveisService } from './imoveis.service';
+import { ImovelDTO } from './imovel.dto';
 
 @Controller('imoveis')
 export class ImoveisController {
@@ -14,12 +14,22 @@ export class ImoveisController {
   }
 
   @Get()
-  async findAll() {
-    return this.imoveisService.findAll();
+  async findAll(@UsuarioAtual() usuario: Usuario) {
+    return this.imoveisService.findAll(usuario);
   }
 
   @Delete('many')
   async deleteMany(@Body() data: { id_imovel: string}[], @UsuarioAtual() usuario: Usuario) {
     return this.imoveisService.deleteMany(data, usuario);
+  }
+
+  @Patch('disponibilidade')
+  async atualizaDisponibilidade(@Body() data: ImovelDTO, @UsuarioAtual() usuario: Usuario) {
+    return this.imoveisService.atualizaDisponibilidade(data, usuario);
+  }
+
+  @Get('id')
+  async encontrarImovel(@Body('id_imovel') id_imovel: string) {
+    return this.imoveisService.encontraImovelPorId(id_imovel);
   }
 }

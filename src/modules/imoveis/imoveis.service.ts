@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/database/PrismaService';
 import { ImovelDTO } from './imovel.dto';
 import { Usuario } from '../usuarios/entities/usuario.entity';
@@ -18,17 +18,20 @@ export class ImoveisService {
             }
         });
         if (imovelExists) {
-            throw new Error('Imovel ja existe!');
+            throw new HttpException('O imóvel já existe', HttpStatus.CONFLICT);
         }
         data.proprietario = usuario.id_usuario;
         const imovel = await this.prisma.imovelTemporada.create({ data });
         return imovel
     }
 
-    async findAll() {
+    async findAll(usuario: Usuario) {
         return this.prisma.imovelTemporada.findMany({
             include: {
                 ReservaTemporada: true
+            },
+            where: {
+                proprietario: usuario.id_usuario
             }
         });
     }
@@ -41,14 +44,41 @@ export class ImoveisService {
                 proprietario: usuario.id_usuario
             }
         });
-
         if(imovelExists.length === 0) {
-            throw new Error('Imovel não existe!');
+            throw new HttpException('Imovel não existe!', HttpStatus.NOT_FOUND);
         }
         return await this.prisma.imovelTemporada.deleteMany({
             where: {
                 id_imovel: { in: ids }
             }
         });
+    }
+
+    async atualizaDisponibilidade(data: ImovelDTO, usuario: Usuario) {
+        const imovelExists = await this.prisma.imovelTemporada.findFirst({
+            where: {
+              id_imovel: data.id_imovel,
+              proprietario: usuario.id_usuario,
+            },
+          });
+          if (!imovelExists) {
+            throw new HttpException('Imovel não existe!', HttpStatus.NOT_FOUND);
+          }
+          return await this.prisma.imovelTemporada.update({
+            where: {
+              id_imovel: data.id_imovel,
+            },
+            data: {
+              disponivel: data.disponivel,
+            },
+          });
+    }
+
+    async encontraImovelPorId(data: string) {
+        return this.prisma.imovelTemporada.findFirst({
+            where : {
+                id_imovel: data
+            }
+        })
     }
 }
