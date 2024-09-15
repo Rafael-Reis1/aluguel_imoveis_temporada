@@ -17,6 +17,7 @@ model ImovelTemporada {
   id_imovel String @id @default(uuid())
   cep String
   logradouro String
+  numero Int
   bairro String
   localidade String
   estado String

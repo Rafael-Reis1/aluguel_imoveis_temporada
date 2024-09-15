@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/database/PrismaService';
 import { ReservaDTO } from './reserva.dto';
+import { Usuario } from '../usuarios/entities/usuario.entity';
 
 @Injectable()
 export class ReservasService {
     constructor(private prisma: PrismaService) {}
-    async create(data: ReservaDTO) {
+    async create(data: ReservaDTO, usuario: Usuario) {
         const reservaExists = await this.prisma.reservaTemporada.findFirst({
             where: {
                 OR: [{
@@ -38,6 +39,7 @@ export class ReservasService {
         if (reservaExists) {
             throw new Error('Reserva já existe para esse imóvel ou o imóvel está indisponível!');
         }
+        data.cliente = usuario.id_usuario;
         const reserva = await this.prisma.reservaTemporada.create({ data });
         return reserva;
     }
