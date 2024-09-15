@@ -75,10 +75,14 @@ export class ImoveisService {
     }
 
     async encontraImovelPorId(data: string) {
-        return this.prisma.imovelTemporada.findFirst({
+        const imovelExists = await this.prisma.imovelTemporada.findFirst({
             where : {
                 id_imovel: data
             }
         })
+        if (!imovelExists) {
+            throw new HttpException('Imovel não existe!', HttpStatus.NOT_FOUND);
+        }
+        return imovelExists;
     }
 }
