@@ -30,28 +30,12 @@ export class UsuariosService {
       senha: undefined
     };
   }
-
-
+  
   async findByEmail(email: string) {
     return this.prisma.usuario.findUnique({
       where: {
         email
       }
     });
-  }
-
-  async validaUsuarioLogado(usuario: Usuario) {
-    const usuarioExiste = await this.prisma.usuario.findFirst({
-      where: {
-        id_usuario: usuario.id_usuario
-      }
-    });
-    if (!usuarioExiste) {
-      throw new HttpException('Usuario não existe!', HttpStatus.NOT_FOUND);
-    }
-    return {
-      ...usuario,
-      senha: undefined
-    }
   }
 }

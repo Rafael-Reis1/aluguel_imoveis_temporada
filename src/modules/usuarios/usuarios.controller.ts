@@ -17,6 +17,6 @@ export class UsuariosController {
 
   @Get('me')
   getMe(@UsuarioAtual() usuario: Usuario) {
-    return this.usuariosService.validaUsuarioLogado(usuario);
+    return usuario;
   }
 }

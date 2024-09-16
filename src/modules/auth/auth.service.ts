@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { UsuariosService } from '../usuarios/usuarios.service';
 import * as bcrypt from 'bcrypt'
 import { UsuarioPayload } from './models/UsuarioPayload';
@@ -36,9 +36,21 @@ export class AuthService {
                     senha: undefined
                 }
             }
-
         }
 
-        throw new Error('Email ou senha incorretos!')
+        throw new HttpException('Email ou senha incorretos!', HttpStatus.UNAUTHORIZED);
     }
+
+    async validateUserEmail(email: string) {
+      const usuario = await this.usuariosService.findByEmail(email);
+      
+      if (usuario) {
+        return {
+            ...usuario,
+            senha: undefined
+        }
+      }
+
+      throw new HttpException('Usuario não existe!', HttpStatus.NOT_FOUND);
+  }
 }
