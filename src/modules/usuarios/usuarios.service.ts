@@ -38,4 +38,16 @@ export class UsuariosService {
       }
     });
   }
+
+  findMe(usuario: Usuario) {
+    return this.prisma.usuario.findFirst({
+      include: {
+        ImovelTemporada: true,
+        ReservaTemporada: true
+      },
+      where: {
+        id_usuario: usuario.id_usuario
+      }
+    });
+  }
 }

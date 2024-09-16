@@ -17,6 +17,6 @@ export class UsuariosController {
 
   @Get('me')
   getMe(@UsuarioAtual() usuario: Usuario) {
-    return usuario;
+    return this.usuariosService.findMe(usuario);
   }
 }
