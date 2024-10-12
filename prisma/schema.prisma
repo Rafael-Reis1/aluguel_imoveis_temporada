@@ -21,6 +21,7 @@ model ImovelTemporada {
   bairro String
   localidade String
   estado String
+  uf String
   preco Float
   proprietario String
   disponivel Boolean

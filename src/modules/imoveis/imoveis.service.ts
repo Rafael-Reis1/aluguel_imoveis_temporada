@@ -14,7 +14,8 @@ export class ImoveisService {
                 numero: data.numero,
                 bairro: data.bairro,
                 localidade: data.localidade,
-                estado: data.estado
+                estado: data.estado,
+                uf: data.uf
             }
         });
         if (imovelExists) {
@@ -34,6 +35,10 @@ export class ImoveisService {
                 proprietario: usuario.id_usuario
             }
         });
+    }
+
+    findAllPublic() {
+        return this.prisma.imovelTemporada.findMany();
     }
 
     async deleteMany(data: { id_imovel: string}[], usuario: Usuario) {

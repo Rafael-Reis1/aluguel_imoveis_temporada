@@ -6,6 +6,7 @@ export type ImovelDTO = {
     bairro: string;
     localidade: string;
     estado: string;
+    uf: string;
     preco: number;
     proprietario: string;
     disponivel: boolean;

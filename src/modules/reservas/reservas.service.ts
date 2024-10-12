@@ -12,30 +12,30 @@ export class ReservasService {
         const imovel = await this.imoveisService.encontraImovelPorId(data.id_imovel);
         const reservaExists = await this.prisma.reservaTemporada.findFirst({
           where: {
-              OR: [
-                {
-                  AND: [
-                    { data_entrada: { gte: data.data_entrada } },
-                    { data_entrada: { lte: data.data_saida } },
-                    { id_imovel: data.id_imovel }
-                  ]
-                },
-                {
-                  AND: [
-                    { data_saida: { gte: data.data_entrada } },
-                    { data_saida: { lte: data.data_saida } },
-                    { id_imovel: data.id_imovel }
-                  ]
-                },
-                {
-                  AND: [
-                    { data_entrada: { lte: data.data_entrada } },
-                    { data_saida: { gte: data.data_saida } },
-                    { id_imovel: data.id_imovel }
-                  ]
-                }
-              ]
-            }
+            OR: [
+              {
+                AND: [
+                  { data_entrada: { gte: data.data_entrada } },
+                  { data_entrada: { lte: data.data_saida } },
+                  { id_imovel: data.id_imovel }
+                ]
+              },
+              {
+                AND: [
+                  { data_saida: { gte: data.data_entrada } },
+                  { data_saida: { lte: data.data_saida } },
+                  { id_imovel: data.id_imovel }
+                ]
+              },
+              {
+                AND: [
+                  { data_entrada: { lte: data.data_entrada } },
+                  { data_saida: { gte: data.data_saida } },
+                  { id_imovel: data.id_imovel }
+                ]
+              }
+            ]
+          }
         })
         if (reservaExists) {
           throw new HttpException('Reserva já existe nessa data para esse imóvel!', HttpStatus.CONFLICT);
@@ -54,8 +54,8 @@ export class ReservasService {
         const totalPreco = (await imovel).preco * totalDias;
         data.totalDias = totalDias.toString();
         data.totalPreco = totalPreco;
-        const reserva = await this.prisma.reservaTemporada.create({ data });
-        return reserva;
+        return await this.prisma.reservaTemporada.create({ data });
+        
       } catch (error) {
         if (error.status === 404) {
           throw new HttpException('Imovel não existe!', HttpStatus.NOT_FOUND);
@@ -93,5 +93,27 @@ export class ReservasService {
                 id_reserva: { in: ids }
             }
         });
+    }
+
+    async atualizaReserva(data: ReservaDTO, usuario: Usuario) {
+      const reservaExists = await this.prisma.reservaTemporada.findFirst({
+        where: {
+          id_reserva: data.id_reserva,
+          cliente: usuario.id_usuario
+        }
+      });
+      if(!reservaExists) {
+        throw new HttpException('Reserva não existe!', HttpStatus.NOT_FOUND);
+      }
+      return await this.prisma.reservaTemporada.update({
+        where: {
+          id_reserva: data.id_reserva,
+          cliente: usuario.id_usuario
+        },
+        data: {
+          data_entrada: data.data_entrada,
+          data_saida: data.data_saida
+        }
+      });
     }
 }

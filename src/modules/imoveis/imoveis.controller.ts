@@ -3,6 +3,7 @@ import { UsuarioAtual } from '../auth/decorators/usuario-atual.decorator';
 import { Usuario } from '../usuarios/entities/usuario.entity';
 import { ImoveisService } from './imoveis.service';
 import { ImovelDTO } from './imovel.dto';
+import { IsPublic } from '../auth/decorators/is-public.decorator';
 
 @Controller('imoveis')
 export class ImoveisController {
@@ -16,6 +17,12 @@ export class ImoveisController {
   @Get()
   async findAll(@UsuarioAtual() usuario: Usuario) {
     return this.imoveisService.findAll(usuario);
+  }
+
+  @IsPublic()
+  @Get('public')
+  async findAllPublic() {
+    return this.imoveisService.findAllPublic();
   }
 
   @Delete('many')
