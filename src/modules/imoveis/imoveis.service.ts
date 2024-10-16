@@ -38,7 +38,11 @@ export class ImoveisService {
     }
 
     findAllPublic() {
-        return this.prisma.imovelTemporada.findMany();
+        return this.prisma.imovelTemporada.findMany({
+            where: {
+                disponivel: true
+            }
+        });
     }
 
     async deleteMany(data: { id_imovel: string}[], usuario: Usuario) {
@@ -59,7 +63,7 @@ export class ImoveisService {
         });
     }
 
-    async atualizaDisponibilidade(data: ImovelDTO, usuario: Usuario) {
+    async atualizaImovel(data: ImovelDTO, usuario: Usuario) {
         const imovelExists = await this.prisma.imovelTemporada.findFirst({
             where: {
               id_imovel: data.id_imovel,
@@ -81,6 +85,9 @@ export class ImoveisService {
 
     async encontraImovelPorId(data: string) {
         const imovelExists = await this.prisma.imovelTemporada.findFirst({
+            include: {
+                ReservaTemporada: true
+            },
             where : {
                 id_imovel: data
             }
