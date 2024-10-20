@@ -50,7 +50,7 @@ export class ReservasService {
         const dataEntrada = new Date(data.data_entrada);
         const timestampdataEntrada = dataEntrada.getTime();
         const diferencaEmMilissegundos = timestampdataSaida - timestampdataEntrada;
-        const totalDias = Math.floor(diferencaEmMilissegundos / umDiaEmMilissegundos);
+        const totalDias = Math.floor(diferencaEmMilissegundos / umDiaEmMilissegundos) + 1;
         const totalPreco = (await imovel).preco * totalDias;
         data.totalDias = totalDias.toString();
         data.totalPreco = totalPreco;
