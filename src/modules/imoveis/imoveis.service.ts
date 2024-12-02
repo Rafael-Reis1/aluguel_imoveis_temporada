@@ -77,9 +77,7 @@ export class ImoveisService {
             where: {
               id_imovel: data.id_imovel,
             },
-            data: {
-              disponivel: data.disponivel,
-            },
+            data: data,
           });
     }
 

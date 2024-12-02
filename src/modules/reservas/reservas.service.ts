@@ -71,9 +71,12 @@ export class ReservasService {
 
     async findAll(usuario: Usuario) {
         return this.prisma.reservaTemporada.findMany({
-            where: {
-                cliente: usuario.id_usuario
-            }
+          include: {
+            imoveis: true
+          },
+          where: {
+              cliente: usuario.id_usuario
+          }
         });
     }
 
