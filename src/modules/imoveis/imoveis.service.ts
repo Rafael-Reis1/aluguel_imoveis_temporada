@@ -29,7 +29,11 @@ export class ImoveisService {
     async findAll(usuario: Usuario) {
         return this.prisma.imovelTemporada.findMany({
             include: {
-                ReservaTemporada: true
+                ReservaTemporada: {
+                  include: {
+                    usuarios: true, // Inclui os dados do usuário que fez a reserva
+                  },
+                },
             },
             where: {
                 proprietario: usuario.id_usuario
@@ -84,7 +88,11 @@ export class ImoveisService {
     async encontraImovelPorId(data: string) {
         const imovelExists = await this.prisma.imovelTemporada.findFirst({
             include: {
-                ReservaTemporada: true
+                ReservaTemporada: {
+                  include: {
+                    usuarios: true, // Inclui os dados do usuário que fez a reserva
+                  },
+                },
             },
             where : {
                 id_imovel: data
